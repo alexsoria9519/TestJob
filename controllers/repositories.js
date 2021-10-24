@@ -47,6 +47,104 @@ const importFileDataRepository = (req, res = response) => {
     });
 }
 
+/* Method that allows get data of all repositories */
+const getAllRepositories = async (req, res = response) => {
+    try {
+        const { limit = 5, from = 0 } = req.query; // for pagination registers
+        const [total, repositories] = await Promise.all([
+            Repository.count(), // Call to count register
+            Repository.find() // Call to find all register
+            .skip(Number(from))
+            .limit(Number(limit))
+        ]);
+
+        res.status(200).json({
+            total,
+            data: repositories,
+            ok: true
+        });
+    } catch (err) {
+        res.status(500).json({
+            msg: `An error occurred while obtaining the data`,
+            ok: false,
+            err
+        });
+        //throw new Error(err);
+    }
+}
+
+/* Method that allows delete a repository's data */
+const deleteRepo = async (req, res = response) => {
+    try {
+        const { id } = req.params;
+        const repo = await Repository.findByIdAndDelete(id);
+        res.status(200).json({
+            data: repo,
+            ok: true,
+            msg: `Has been successfully deleted`
+        });
+    } catch (err) {
+        res.status(500).json({
+            msg: `An error occurred while deleting user data`,
+            ok: false,
+            err
+        });
+    }
+}
+
+/* Method that allows update the repository's data */
+const updateRepo = async (req, res = response) => {
+    
+    if (!req.body || Object.keys(req.body).length === 0) {
+        res.status(400).json({
+            msg: `Bad request, don't exist data to update`,
+            ok: false
+        });
+    }
+
+    try {
+        const { id } = req.params;
+        const body = req.body;
+        const repo = await Repository.findByIdAndUpdate(id, body);
+        res.status(200).json({
+            data: repo,
+            ok: true,
+            msg: `Has been successfully updated`
+        });
+    } catch (err) {
+        res.status(500).json({
+            msg: `An error occurred while update user data`,
+            ok: false,
+            err
+        });
+    }
+}
+
+/* Method that allows get the repository's data */
+const getRepoData = async (req, res = response) => {
+    try {
+        const { id } = req.params;
+        const repo = await Repository.findById(id);
+        res.status(200).json({
+            data: repo,
+            ok: true
+        });
+    } catch (err) {
+        res.status(500).json({
+            msg: `An error occurred while update repository data`,
+            ok: false,
+            err
+        });
+    }
+}
+
+
+
+
 module.exports = {
-    importFileDataRepository
+    importFileDataRepository,
+    getAllRepositories,
+    deleteRepo,
+    updateRepo,
+    getRepoData
 }
