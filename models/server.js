@@ -11,6 +11,7 @@ class Server {
         this.testPath = '/api/test';
         this.gitPath = '/api/github';
         this.userPath = '/api/user';
+        this.repositoryPath = '/api/repos';
 
         //Connect to BD
         this.database();
@@ -32,6 +33,7 @@ class Server {
         this.app.use(this.testPath, require('../routes/test'));
         this.app.use(this.gitPath, require('../routes/github'));
         this.app.use(this.userPath, require('../routes/users'));
+        this.app.use(this.repositoryPath, require('../routes/repositories'));
 
     }
 
