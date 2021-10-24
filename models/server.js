@@ -1,5 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const { dbConnection } = require('../database/config');
+const fileUpload = require('express-fileupload');
 class Server {
 
     constructor() {
@@ -7,6 +10,10 @@ class Server {
         this.port = process.env.PORT;
         this.testPath = '/api/test';
         this.gitPath = '/api/github';
+        this.userPath = '/api/user';
+
+        //Connect to BD
+        this.database();
 
 
         // Middlewares
@@ -24,12 +31,27 @@ class Server {
         // Config test routes
         this.app.use(this.testPath, require('../routes/test'));
         this.app.use(this.gitPath, require('../routes/github'));
+        this.app.use(this.userPath, require('../routes/users'));
 
     }
 
     middlewares(){
         //CORS
         this.app.use(cors());
+
+         // Body Parser
+         
+         this.app.use(bodyParser.json());
+         this.app.use(bodyParser.urlencoded({extended: true}));
+
+         // Middleware Files
+         this.app.use(fileUpload());
+
+    }
+
+    async database(){
+        // call to database config
+        await dbConnection();
     }
 
 
