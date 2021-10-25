@@ -55,7 +55,7 @@ const getAllRepositories = async (req, res = response) => {
             Repository.count(), // Call to count register
             Repository.find() // Call to find all register
             .skip(Number(from))
-            .limit(Number(limit))
+            // .limit(Number(limit))
         ]);
 
         res.status(200).json({

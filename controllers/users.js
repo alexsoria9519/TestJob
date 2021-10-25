@@ -32,7 +32,7 @@ const getAllUsers = async (req, res = response) => {
             User.count(), // Call to count register
             User.find() // Call to find all register
             .skip(Number(from))
-            .limit(Number(limit))
+            //.limit(Number(limit))
         ]);
 
         res.status(200).json({
